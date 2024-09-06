@@ -5,11 +5,10 @@ import com.enigmacamp.warung_makan_bahari_api.entity.Customer;
 import java.util.List;
 
 public interface CustomerService {
-//    private Customer;
-    public Customer addCustomer(Customer newCustomer);
-    public Customer getCustomerById(String id);
-    public List<Customer> getAllCustomers();
-    public Customer editCustomer(Customer editCustomer);
-    public void deleteCustomer(String id);
+    Customer addCustomer(Customer newCustomer);
+    Customer getCustomerById(String id);
+    List<Customer> getAllCustomers();
+    Customer editCustomer(Customer editCustomer);
+    void deleteCustomer(String id);
 
 }

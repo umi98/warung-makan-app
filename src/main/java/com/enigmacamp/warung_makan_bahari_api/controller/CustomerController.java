@@ -1,15 +1,15 @@
 package com.enigmacamp.warung_makan_bahari_api.controller;
 
 import com.enigmacamp.warung_makan_bahari_api.entity.Customer;
-import com.enigmacamp.warung_makan_bahari_api.repository.CustomerRepository;
 import com.enigmacamp.warung_makan_bahari_api.service.CustomerService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
+@RequestMapping("/api/customers")
 public class CustomerController {
     private CustomerService customerService;
 
@@ -18,19 +18,23 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
-    @GetMapping("/api/v1/customers")
+    @GetMapping()
     public List<Customer> getAllCustomer() {
         return customerService.getAllCustomers();
     }
 
-    @GetMapping("/api/v1/customers/{id}")
+    @GetMapping("/{id}")
     public Customer getCustomerById(@PathVariable String id) {
         return customerService.getCustomerById(id);
     }
 
-    @PostMapping("/api/v1/customers")
-    public Customer addCustomer(@RequestBody Customer customer) {
-        return customerService.addCustomer(customer);
+    @PostMapping()
+    public Customer addCustomer(@Valid @RequestBody Customer customer) {
+        try {
+            return customerService.addCustomer(customer);
+        } catch (RuntimeException e) {
+            throw new RuntimeException("Phone number already exists");
+        }
     }
 
 // Using Path variable to edit customer
@@ -47,12 +51,12 @@ public class CustomerController {
 //    }
 
 // Edit customer and get id directly from request body
-    @PutMapping("/api/v1/customers")
-    public Customer editCustomerv2(@RequestBody Customer customer) {
+    @PutMapping()
+    public Customer editCustomerv2(@Valid @RequestBody Customer customer) {
        return customerService.editCustomer(customer);
     }
 
-    @DeleteMapping("api/v1/customers/{id}")
+    @DeleteMapping("/{id}")
     public void deleteCustomerById(@PathVariable String id) {
         customerService.deleteCustomer(id);
     }
