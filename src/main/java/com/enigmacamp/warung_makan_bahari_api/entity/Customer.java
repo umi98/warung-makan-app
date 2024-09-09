@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Table(name="m_customer")
 @Setter
@@ -27,5 +29,8 @@ public class Customer {
     @Column(name = "is_member", nullable = false)
     @NotNull
     private Boolean isMember;
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.PERSIST)
+    private List<Order> order;
 
 }

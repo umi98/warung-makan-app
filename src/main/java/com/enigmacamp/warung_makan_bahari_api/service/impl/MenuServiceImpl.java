@@ -4,11 +4,12 @@ import com.enigmacamp.warung_makan_bahari_api.entity.Menu;
 import com.enigmacamp.warung_makan_bahari_api.repository.MenuRepository;
 import com.enigmacamp.warung_makan_bahari_api.service.MenuService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController
+@Service
 @RequiredArgsConstructor
 public class MenuServiceImpl implements MenuService {
     private final MenuRepository menuRepository;
@@ -25,12 +26,12 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public List<Menu> getAllMenu(String name, Long minPrice, Long maxPrice) {
-        if (name == null && minPrice != null && maxPrice != null) {
+        if (name == null && minPrice == null && maxPrice == null) {
             return menuRepository.findAll();
         } else if (name == null) {
             return menuRepository.findAllByPriceBetween(minPrice, maxPrice);
         }
-        return menuRepository.findAllByNameLikeIgnoreCaseAndPriceBetween('%'+name+'%', minPrice, maxPrice);
+        return menuRepository.findAllByNameLikeIgnoreCaseAndPriceBetween('%' + name + '%', minPrice, maxPrice);
     }
 
     @Override

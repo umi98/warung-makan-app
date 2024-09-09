@@ -2,7 +2,6 @@ package com.enigmacamp.warung_makan_bahari_api.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,21 +9,18 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Entity
-@Table(name = "m_menu")
-@Data
+@Table(name = "m_table")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Menu {
+@Data
+public class Tables {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
+    @Column(name = "table_name", nullable = false, unique = true)
     @NotEmpty
-    @Column(name = "name", nullable = false)
     private String name;
-    @Positive
-    @Column(name = "price", nullable = false)
-    private Long price;
 
-    @OneToMany(mappedBy = "menu", cascade = CascadeType.PERSIST)
-    private List<OrderDetail> orderDetail;
+    @OneToMany(mappedBy = "tables", cascade = CascadeType.PERSIST)
+    private List<Order> order;
 }

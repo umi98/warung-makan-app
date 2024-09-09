@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Service
 public class CustomerServiceServiceImpl implements CustomerService {
-    private final CustomerRepository customerRepository;
+    private CustomerRepository customerRepository;
 
     @Autowired
     public CustomerServiceServiceImpl(CustomerRepository customerRepository) {
