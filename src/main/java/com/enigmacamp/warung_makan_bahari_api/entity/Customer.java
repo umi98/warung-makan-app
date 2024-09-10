@@ -1,5 +1,6 @@
 package com.enigmacamp.warung_makan_bahari_api.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -30,6 +31,7 @@ public class Customer {
     @NotNull
     private Boolean isMember;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "customer", cascade = CascadeType.PERSIST)
     private List<Order> order;
 

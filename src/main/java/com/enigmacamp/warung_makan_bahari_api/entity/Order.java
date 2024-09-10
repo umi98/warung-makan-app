@@ -28,6 +28,7 @@ public class Order {
     @Column(name = "trans_date")
     private LocalDateTime transDate;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)
     private List<OrderDetail> orderDetails;
 }

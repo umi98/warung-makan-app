@@ -1,5 +1,6 @@
 package com.enigmacamp.warung_makan_bahari_api.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
@@ -21,6 +22,7 @@ public class Tables {
     @NotEmpty
     private String name;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "tables", cascade = CascadeType.PERSIST)
     private List<Order> order;
 }
