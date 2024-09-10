@@ -2,6 +2,8 @@ package com.enigmacamp.warung_makan_bahari_api.service.impl;
 
 import com.enigmacamp.warung_makan_bahari_api.dto.request.OrderDetailRequest;
 import com.enigmacamp.warung_makan_bahari_api.dto.request.OrderRequest;
+import com.enigmacamp.warung_makan_bahari_api.dto.response.OrderDetailResponse;
+import com.enigmacamp.warung_makan_bahari_api.dto.response.OrderResponse;
 import com.enigmacamp.warung_makan_bahari_api.entity.*;
 import com.enigmacamp.warung_makan_bahari_api.repository.MenuRepository;
 import com.enigmacamp.warung_makan_bahari_api.repository.OrderDetailRepository;
@@ -63,38 +65,69 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public Order addNewTransaction(OrderRequest orderRequest) {
-        Order order = new Order();
-
+    public OrderResponse addNewTransaction(OrderRequest orderRequest) {
         Customer customer = customerService.getCustomerById(orderRequest.getCustomerId());
-        order.setCustomer(customer);
-
         Tables tables = tablesService.getTablesById(orderRequest.getTableId());
-        order.setTables(tables);
-
-        order.setTransDate(LocalDateTime.now());
+        Order order = Order.builder()
+                .customer(customer)
+                .tables(tables)
+                .transDate(LocalDateTime.now())
+                .build();
         orderRepository.saveAndFlush(order);
 
         List<OrderDetail> orderDetails = new ArrayList<>();
         for (OrderDetailRequest detailRequest : orderRequest.getOrderDetails()) {
-            OrderDetail orderDetail = new OrderDetail();
-            orderDetail.setOrder(order);
             Menu menu = menuService.getMenuById(detailRequest.getMenuId());
-            orderDetail.setOrder(order);
-            orderDetail.setMenu(menu);
-            orderDetail.setQty(detailRequest.getQty());
-            orderDetail.setPrice(menu.getPrice());
-
+            OrderDetail orderDetail = OrderDetail.builder()
+                    .order(order)
+                    .menu(menu)
+                    .qty(detailRequest.getQty())
+                    .price(menu.getPrice())
+                    .build();
             orderDetails.add(orderDetail);
         }
 
         orderDetailService.addBulk(orderDetails);
-//        order.setOrderDetails(orderDetails);
-        return order;
+        order.setOrderDetails(orderDetails);
+
+        return mapToResponse(order);
     }
 
     @Override
-    public List<Order> getAllOrders() {
-        return orderRepository.findAll();
+    public List<OrderResponse> getAllOrders() {
+        List<Order> result = orderRepository.findAll();
+        // cara 1
+//        List<OrderResponse> responses = new ArrayList<>();
+//        for (Order res: result) {
+//            OrderResponse orderResponse = mapToResponse(res);
+//            responses.add(orderResponse);
+//        }
+        // cara 2
+        List<OrderResponse> responses = result.stream().map(this::mapToResponse).toList();
+        return responses;
+    }
+
+    @Override
+    public OrderResponse getOrderById(String id) {
+        return null;
+    }
+
+    private OrderResponse mapToResponse(Order order) {
+        List<OrderDetailResponse> response = order.getOrderDetails().stream().map(orderDetail -> {
+            return OrderDetailResponse.builder()
+                    .orderDetailId(orderDetail.getId())
+                    .orderId(orderDetail.getOrder().getId())
+                    .menuId(orderDetail.getMenu().getId())
+                    .price(orderDetail.getPrice())
+                    .qty(orderDetail.getQty())
+                    .build();
+        }).toList();
+        return OrderResponse.builder()
+                .orderId(order.getId())
+                .customerId(order.getCustomer().getId())
+                .tableId(order.getTables().getId())
+                .transDate(order.getTransDate())
+                .orderDetails(response)
+                .build();
     }
 }

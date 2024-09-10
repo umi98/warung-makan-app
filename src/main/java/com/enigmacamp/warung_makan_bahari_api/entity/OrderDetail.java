@@ -1,9 +1,11 @@
 package com.enigmacamp.warung_makan_bahari_api.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,12 +14,14 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class OrderDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     @ManyToOne
-    @JsonIgnore
+//    @JsonIgnore
+    @JsonBackReference
     @JoinColumn(name = "order_id")
     private Order order;
     @ManyToOne
