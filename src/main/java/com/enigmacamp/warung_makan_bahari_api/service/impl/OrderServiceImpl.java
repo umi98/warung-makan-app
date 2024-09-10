@@ -109,7 +109,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderResponse getOrderById(String id) {
-        return null;
+        Order result = orderRepository.findById(id).get();
+        if (result.getId() == null) return null;
+        return mapToResponse(result);
     }
 
     private OrderResponse mapToResponse(Order order) {
