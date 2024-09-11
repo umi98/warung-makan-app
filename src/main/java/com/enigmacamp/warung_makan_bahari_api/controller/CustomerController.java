@@ -1,9 +1,11 @@
 package com.enigmacamp.warung_makan_bahari_api.controller;
 
+import com.enigmacamp.warung_makan_bahari_api.dto.request.CustomerPagingRequest;
 import com.enigmacamp.warung_makan_bahari_api.entity.Customer;
 import com.enigmacamp.warung_makan_bahari_api.service.CustomerService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,8 +21,15 @@ public class CustomerController {
     }
 
     @GetMapping()
-    public List<Customer> getAllCustomer() {
-        return customerService.getAllCustomers();
+    public Page<Customer> getAllCustomer(
+            @RequestParam(required = false, defaultValue = "1") Integer page,
+            @RequestParam(required = false, defaultValue = "1") Integer size
+    ) {
+        CustomerPagingRequest request = CustomerPagingRequest.builder()
+                .page(page)
+                .size(size)
+                .build();
+        return customerService.getAllCustomers(request);
     }
 
     @GetMapping("/{id}")

@@ -4,8 +4,11 @@ import com.enigmacamp.warung_makan_bahari_api.entity.Menu;
 import com.enigmacamp.warung_makan_bahari_api.repository.MenuRepository;
 import com.enigmacamp.warung_makan_bahari_api.service.MenuService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -47,6 +50,6 @@ public class MenuServiceImpl implements MenuService {
     }
 
     private Menu findByIdOrThrowException(String id) {
-        return menuRepository.findById(id).orElseThrow(() -> new RuntimeException("Menu not found"));
+        return menuRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Menu not found"));
     }
 }

@@ -1,9 +1,13 @@
 package com.enigmacamp.warung_makan_bahari_api.service.impl;
 
+import com.enigmacamp.warung_makan_bahari_api.dto.request.CustomerPagingRequest;
 import com.enigmacamp.warung_makan_bahari_api.entity.Customer;
 import com.enigmacamp.warung_makan_bahari_api.repository.CustomerRepository;
 import com.enigmacamp.warung_makan_bahari_api.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,8 +33,9 @@ public class CustomerServiceServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<Customer> getAllCustomers() {
-        return customerRepository.findAll();
+    public Page<Customer> getAllCustomers(CustomerPagingRequest request) {
+        Pageable pageable = PageRequest.of(request.getPage() - 1, request.getSize() );
+        return customerRepository.findAll(pageable);
     }
 
     @Override
