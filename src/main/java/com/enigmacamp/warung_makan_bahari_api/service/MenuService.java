@@ -1,15 +1,20 @@
 package com.enigmacamp.warung_makan_bahari_api.service;
 
+import com.enigmacamp.warung_makan_bahari_api.dto.request.MenuRequest;
+import com.enigmacamp.warung_makan_bahari_api.dto.request.PagingRequest;
+import com.enigmacamp.warung_makan_bahari_api.dto.response.MenuResponse;
 import com.enigmacamp.warung_makan_bahari_api.entity.Menu;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 
 public interface MenuService {
-    Menu addMenu(Menu menu);
+    MenuResponse addMenu(MenuRequest menu);
     Menu getMenuById(String id);
-    List<Menu> getAllMenu(String name, Long minPrice, Long maxPrice);
+    Page<Menu> getAllMenu(String name, Long minPrice, Long maxPrice, PagingRequest request);
     Menu updateMenu(Menu menu);
     void deleteMenu(String id);
 }

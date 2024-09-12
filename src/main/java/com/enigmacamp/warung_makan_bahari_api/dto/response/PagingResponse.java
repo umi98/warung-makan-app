@@ -1,4 +1,4 @@
-package com.enigmacamp.warung_makan_bahari_api.dto.request;
+package com.enigmacamp.warung_makan_bahari_api.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CustomerPagingRequest {
-    private Integer size;
+public class PagingResponse {
+    private Integer totalPage;
+    private Long count;
     private Integer page;
+    private Integer size;
 }
