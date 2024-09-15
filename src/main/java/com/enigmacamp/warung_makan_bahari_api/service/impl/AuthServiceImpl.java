@@ -66,7 +66,7 @@ public class AuthServiceImpl implements AuthService {
                     .username(newUser.getUsername())
                     .role(newUser.getRole().getRoleName().name())
                     .fullName(newCustomer.getFullName())
-                    .isMember(newCustomer.getIsMember())
+//                    .isMember(newCustomer.getIsMember())
                     .phoneNumber(newCustomer.getPhoneNumber())
                     .build();
         } catch (DataIntegrityViolationException e) {

@@ -7,6 +7,7 @@ import com.enigmacamp.warung_makan_bahari_api.dto.response.CommonResponse;
 import com.enigmacamp.warung_makan_bahari_api.dto.response.MenuResponse;
 import com.enigmacamp.warung_makan_bahari_api.dto.response.PagingResponse;
 import com.enigmacamp.warung_makan_bahari_api.service.MenuService;
+import com.enigmacamp.warung_makan_bahari_api.util.ResponseBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -21,19 +22,13 @@ import java.util.List;
 @RequestMapping(PathApi.MENUS)
 public class MenuController {
     private final MenuService menuService;
+    private final ResponseBuilder responseBuilder;
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> addMenu(@RequestBody MenuRequest menuRequest) {
         MenuResponse menuResponse = menuService.addMenu(menuRequest);
-        CommonResponse<MenuResponse> response = CommonResponse.<MenuResponse>builder()
-                .message("Successfully add new menu")
-                .statusCode(HttpStatus.CREATED.value())
-                .data(menuResponse)
-                .build();
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(response);
+        return responseBuilder.buildResponse(menuResponse, "Successfully add new menu", HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -53,53 +48,26 @@ public class MenuController {
                 .count(result.getTotalElements())
                 .totalPage(result.getTotalPages())
                 .build();
-        CommonResponse<List<MenuResponse>> response = CommonResponse.<List<MenuResponse>>builder()
-                .message("Successfully retrieve all items")
-                .statusCode(HttpStatus.FOUND.value())
-                .data(result.getContent())
-                .paging(pagingResponse)
-                .build();
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(response);
+        return responseBuilder.buildResponse(pagingResponse, "Successfully retrieve all items", HttpStatus.FOUND);
     }
 
     @GetMapping(PathApi.ID)
     public ResponseEntity<?> getMenuById(@PathVariable String id) {
-        CommonResponse<MenuResponse> response = CommonResponse.<MenuResponse>builder()
-                .message("Successfully retrieve data")
-                .statusCode(HttpStatus.OK.value())
-                .data(menuService.getMenuById(id))
-                .build();
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(response);
+        MenuResponse response = menuService.getMenuById(id);
+        return responseBuilder.buildResponse(response, "Successfully retrieve data", HttpStatus.OK);
     }
 
     @PutMapping(PathApi.ID)
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> editMenu(@PathVariable String id, @RequestBody MenuRequest menu) {
-        CommonResponse<MenuResponse> response = CommonResponse.<MenuResponse>builder()
-                .message("Menu edited")
-                .statusCode(HttpStatus.OK.value())
-                .data(menuService.updateMenu(id, menu))
-                .build();
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(response);
+        MenuResponse response = menuService.updateMenu(id, menu);
+        return responseBuilder.buildResponse(response, "Menu edited", HttpStatus.OK);
     }
 
     @DeleteMapping(PathApi.ID)
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteMenu(@PathVariable String id) {
         menuService.deleteMenu(id);
-        CommonResponse<?> response = CommonResponse.builder()
-                .message("Data deleted")
-                .statusCode(HttpStatus.OK.value())
-                .data("OK")
-                .build();
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(response);
+        return responseBuilder.buildResponse("OK", "Menu deleted", HttpStatus.OK);
     }
 }

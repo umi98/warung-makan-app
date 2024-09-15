@@ -9,10 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RegisterResponse {
-    private String username;
-    private String role;
-    private String fullName;
-//    private Boolean isMember;
-    private String phoneNumber;
+public class TablesResponse {
+    private String name;
 }

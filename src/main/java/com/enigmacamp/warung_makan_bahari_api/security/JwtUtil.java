@@ -36,7 +36,7 @@ public class JwtUtil {
                     .withClaim("role", appUser.getRole().name())
                     .sign(algorithm);
         } catch (JWTCreationException e) {
-            log.error("Error when creating token", e.getMessage());
+            log.error("Error when creating token: {}", e.getMessage());
             throw new RuntimeException(e);
         }
     }

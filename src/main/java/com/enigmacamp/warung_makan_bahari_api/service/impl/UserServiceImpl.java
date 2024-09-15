@@ -16,10 +16,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public AppUser loadUserByUserId(String id) {
-        UserCredential result = credential.findById(id).orElseThrow(() -> new UsernameNotFoundException("Invalid credential"));
+        UserCredential result = credential.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("Invalid credential"));
         return AppUser.builder()
                 .id(result.getId())
-                .username(result.getUsername().toLowerCase())
+                .username(result.getUsername())
                 .password(result.getPassword())
                 .role(result.getRole().getRoleName())
                 .build();
@@ -30,7 +31,7 @@ public class UserServiceImpl implements UserService {
         UserCredential result = credential.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Invalid credential"));
         return AppUser.builder()
                 .id(result.getId())
-                .username(result.getUsername().toLowerCase())
+                .username(result.getUsername())
                 .password(result.getPassword())
                 .role(result.getRole().getRoleName())
                 .build();

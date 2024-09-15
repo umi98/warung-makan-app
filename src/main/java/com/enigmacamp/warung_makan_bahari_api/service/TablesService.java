@@ -2,18 +2,22 @@ package com.enigmacamp.warung_makan_bahari_api.service;
 
 import java.util.List;
 
+import com.enigmacamp.warung_makan_bahari_api.dto.request.PagingRequest;
+import com.enigmacamp.warung_makan_bahari_api.dto.request.TablesRequest;
+import com.enigmacamp.warung_makan_bahari_api.dto.response.TablesResponse;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import com.enigmacamp.warung_makan_bahari_api.entity.Tables;
 
 public interface TablesService {
-    List<Tables> getAllTables(String name);
+    Page<TablesResponse> getAllTables(String name, PagingRequest request);
 
-    Tables getTablesById(String id);
+    TablesResponse getTablesById(String id);
 
-    Tables addNewTables(Tables tables);
+    TablesResponse addNewTables(TablesRequest tables);
 
-    Tables ediTables(Tables tables);
+    TablesResponse editTables(String id, TablesRequest tables);
 
     void deleteTable(String id);
 }
