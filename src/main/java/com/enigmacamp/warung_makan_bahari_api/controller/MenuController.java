@@ -1,5 +1,6 @@
 package com.enigmacamp.warung_makan_bahari_api.controller;
 
+import com.enigmacamp.warung_makan_bahari_api.constant.PathApi;
 import com.enigmacamp.warung_makan_bahari_api.dto.request.MenuRequest;
 import com.enigmacamp.warung_makan_bahari_api.dto.request.PagingRequest;
 import com.enigmacamp.warung_makan_bahari_api.dto.response.CommonResponse;
@@ -17,7 +18,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/menus")
+@RequestMapping(PathApi.MENUS)
 public class MenuController {
     private final MenuService menuService;
 
@@ -63,7 +64,7 @@ public class MenuController {
                 .body(response);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(PathApi.ID)
     public ResponseEntity<?> getMenuById(@PathVariable String id) {
         CommonResponse<MenuResponse> response = CommonResponse.<MenuResponse>builder()
                 .message("Successfully retrieve data")
@@ -75,9 +76,9 @@ public class MenuController {
                 .body(response);
     }
 
-    @PutMapping()
+    @PutMapping(PathApi.ID)
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> editMenu(String id, @RequestBody MenuRequest menu) {
+    public ResponseEntity<?> editMenu(@PathVariable String id, @RequestBody MenuRequest menu) {
         CommonResponse<MenuResponse> response = CommonResponse.<MenuResponse>builder()
                 .message("Menu edited")
                 .statusCode(HttpStatus.OK.value())
@@ -88,7 +89,7 @@ public class MenuController {
                 .body(response);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(PathApi.ID)
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteMenu(@PathVariable String id) {
         menuService.deleteMenu(id);

@@ -1,5 +1,6 @@
 package com.enigmacamp.warung_makan_bahari_api.controller;
 
+import com.enigmacamp.warung_makan_bahari_api.constant.PathApi;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/tables")
+@RequestMapping(PathApi.TABLES)
 public class TablesController {
     private final TablesService tablesService;
 
@@ -30,7 +31,7 @@ public class TablesController {
         return tablesService.getAllTables(name);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(PathApi.ID)
     public Tables getTablesById(@PathVariable String id) {
         return tablesService.getTablesById(id);
     }
@@ -47,7 +48,7 @@ public class TablesController {
         return tablesService.ediTables(tables);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(PathApi.ID)
     @PreAuthorize("hasRole('ADMIN')")
     public void deleteTables(@PathVariable String id) {
         tablesService.deleteTable(id);

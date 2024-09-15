@@ -38,7 +38,7 @@ public class OrderServiceImpl implements OrderService {
 
         List<OrderDetail> orderDetails = new ArrayList<>();
         for (OrderDetailRequest detailRequest : orderRequest.getOrderDetails()) {
-            Menu menu = menuService.getMenuById(detailRequest.getMenuId());
+            Menu menu = menuService.getById(detailRequest.getMenuId());
             OrderDetail orderDetail = OrderDetail.builder()
                     .order(order)
                     .menu(menu)
@@ -57,8 +57,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderResponse> getAllOrders() {
         List<Order> result = orderRepository.findAll();
-        List<OrderResponse> responses = result.stream().map(this::mapToResponse).toList();
-        return responses;
+        return result.stream().map(this::mapToResponse).toList();
     }
 
     @Override

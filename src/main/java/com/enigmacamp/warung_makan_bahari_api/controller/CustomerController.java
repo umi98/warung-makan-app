@@ -1,5 +1,6 @@
 package com.enigmacamp.warung_makan_bahari_api.controller;
 
+import com.enigmacamp.warung_makan_bahari_api.constant.PathApi;
 import com.enigmacamp.warung_makan_bahari_api.dto.request.CustomerRequest;
 import com.enigmacamp.warung_makan_bahari_api.dto.request.PagingRequest;
 import com.enigmacamp.warung_makan_bahari_api.dto.response.CommonResponse;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/customers")
+@RequestMapping(PathApi.CUSTOMERS)
 @RequiredArgsConstructor
 public class CustomerController {
     private final CustomerService customerService;
@@ -50,7 +51,7 @@ public class CustomerController {
                 .body(response);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(PathApi.ID)
     public ResponseEntity<?> getCustomerById(@PathVariable String id) {
         CommonResponse<CustomerResponse> response = CommonResponse.<CustomerResponse>builder()
                 .message("Successfully retrieve data")
@@ -78,7 +79,7 @@ public class CustomerController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(PathApi.ID)
     public ResponseEntity<?> editCustomerv2(@PathVariable String id, @RequestBody CustomerRequest customer) {
         CommonResponse<CustomerResponse> response = CommonResponse.<CustomerResponse>builder()
                 .message("Successfully edit data")
@@ -90,7 +91,7 @@ public class CustomerController {
                .body(response);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(PathApi.ID)
     public ResponseEntity<?> deleteCustomerById(@PathVariable String id) {
         customerService.deleteCustomer(id);
         CommonResponse<?> response = CommonResponse.builder()

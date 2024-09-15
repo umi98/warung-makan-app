@@ -1,5 +1,6 @@
 package com.enigmacamp.warung_makan_bahari_api.controller;
 
+import com.enigmacamp.warung_makan_bahari_api.constant.PathApi;
 import com.enigmacamp.warung_makan_bahari_api.dto.request.AdminRegisterRequest;
 import com.enigmacamp.warung_makan_bahari_api.dto.request.AuthRequest;
 import com.enigmacamp.warung_makan_bahari_api.dto.request.CustRegisterRequest;
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
     private final AuthService authService;
 
-    @PostMapping("/register/customer")
+    @PostMapping(PathApi.REGISTER_USER)
     public ResponseEntity<?> register(@RequestBody CustRegisterRequest request) {
         RegisterResponse registerResponse = authService.custRegister(request);
         CommonResponse<RegisterResponse> response = CommonResponse.<RegisterResponse>builder()
@@ -34,7 +35,7 @@ public class AuthController {
                 .body(response);
     }
 
-    @PostMapping("/register/admin")
+    @PostMapping(PathApi.REGISTER_ADMIN)
 //    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> registerAdmin(@RequestBody AdminRegisterRequest request) {
         RegisterResponse registerResponse = authService.adminRegister(request);
@@ -51,6 +52,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthRequest request) {
         LoginResponse login = authService.login(request);
+//        return returnResponse("Login sucsess", HttpStatus.ACCEPTED, login.getClass());
         CommonResponse<LoginResponse> response = CommonResponse.<LoginResponse>builder()
                 .message("Login succeess")
                 .statusCode(HttpStatus.CREATED.value())
@@ -61,4 +63,14 @@ public class AuthController {
                 .body(response);
     }
 
+    private ResponseEntity<?> returnResponse(String message, HttpStatus status, Class<?> commResponse) {
+        CommonResponse<?> response = CommonResponse.builder()
+                .message(message)
+                .statusCode(status.value())
+                .data(commResponse)
+                .build();
+        return ResponseEntity
+                .status(status)
+                .body(response);
+    }
 }

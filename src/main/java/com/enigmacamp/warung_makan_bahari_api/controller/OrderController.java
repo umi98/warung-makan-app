@@ -1,5 +1,6 @@
 package com.enigmacamp.warung_makan_bahari_api.controller;
 
+import com.enigmacamp.warung_makan_bahari_api.constant.PathApi;
 import com.enigmacamp.warung_makan_bahari_api.dto.request.OrderRequest;
 import com.enigmacamp.warung_makan_bahari_api.dto.response.CommonResponse;
 import com.enigmacamp.warung_makan_bahari_api.dto.response.OrderDetailResponse;
@@ -16,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/orders")
+@RequestMapping(PathApi.ORDER)
 public class OrderController {
     private final OrderService orderService;
     private final OrderDetailService orderDetailService;
@@ -48,20 +49,20 @@ public class OrderController {
                 .body(response);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getOrderById(@PathVariable String id) {
-        OrderResponse orderResponse = orderService.getOrderById(id);
-        CommonResponse<OrderResponse> response = CommonResponse.<OrderResponse>builder()
-                .message("Successfully retrieve data")
-                .statusCode(HttpStatus.FOUND.value())
-                .data(orderResponse)
-                .build();
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(response);
-    }
+//    @GetMapping(PathApi.ID)
+//    public ResponseEntity<?> getOrderById(@PathVariable String id) {
+//        OrderResponse orderResponse = orderService.getOrderById(id);
+//        CommonResponse<OrderResponse> response = CommonResponse.<OrderResponse>builder()
+//                .message("Successfully retrieve data")
+//                .statusCode(HttpStatus.FOUND.value())
+//                .data(orderResponse)
+//                .build();
+//        return ResponseEntity
+//                .status(HttpStatus.OK)
+//                .body(response);
+//    }
 
-    @GetMapping("/details/{id}")
+    @GetMapping(PathApi.ID)
     public ResponseEntity<?> getOrderDetailById(@PathVariable String id) {
         OrderDetailResponse orderDetailResponse = orderDetailService.getOrderDetailById(id);
         CommonResponse<OrderDetailResponse> response = CommonResponse.<OrderDetailResponse>builder()
