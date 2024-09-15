@@ -1,38 +1,41 @@
 package com.enigmacamp.warung_makan_bahari_api.security;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfiguration {
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws  Exception {
-//        return  http.httpBasic(AbstractHttpConfigurer::disable)
-//                .csrf(AbstractHttpConfigurer::disable)
-//                .sessionManagement(cfg ->cfg.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//                .authorizeHttpRequests(request ->
-//                        request.dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
-//                                .requestMatchers("api/v1/auth/**","api/v1/image/**" , "/swagger-ui/**", "/v3/api-docs/**").permitAll()
-//                                .anyRequest().authenticated()
-//                )
-//                .addFilterBefore(jwtAthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-//                .build();
-//    }
+    private final AuthTokenFilter authTokenFilter;
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(csfr -> csfr.disable())
+        http
+                .httpBasic(withDefaults())
+                .csrf(csfr -> csfr.disable())
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/v1/menus", "/api/v1/auth/**", "/api/v1/tables").permitAll()
-                        .anyRequest().authenticated());
-//                .httpBasic(withDefaults());
+                        .requestMatchers(HttpMethod.POST,"/api/v1/menus", "/api/v1/auth/**", "/api/v1/tables").permitAll()
+                        .anyRequest().authenticated())
+                .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }

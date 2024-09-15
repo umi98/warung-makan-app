@@ -1,12 +1,13 @@
 package com.enigmacamp.warung_makan_bahari_api.controller;
 
+import com.enigmacamp.warung_makan_bahari_api.dto.request.CustomerRequest;
 import com.enigmacamp.warung_makan_bahari_api.dto.request.PagingRequest;
 import com.enigmacamp.warung_makan_bahari_api.dto.response.CommonResponse;
+import com.enigmacamp.warung_makan_bahari_api.dto.response.CustomerResponse;
 import com.enigmacamp.warung_makan_bahari_api.dto.response.PagingResponse;
 import com.enigmacamp.warung_makan_bahari_api.entity.Customer;
 import com.enigmacamp.warung_makan_bahari_api.service.CustomerService;
-import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,13 +17,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/customers")
+@RequiredArgsConstructor
 public class CustomerController {
-    private CustomerService customerService;
-
-    @Autowired
-    public CustomerController(CustomerService customerService) {
-        this.customerService = customerService;
-    }
+    private final CustomerService customerService;
 
     @GetMapping()
     public ResponseEntity<?> getAllCustomer(
@@ -34,7 +31,7 @@ public class CustomerController {
                 .size(size)
                 .build();
 
-        Page<Customer> customers = customerService.getAllCustomers(request);
+        Page<CustomerResponse> customers = customerService.getAllCustomers(request);
 
         PagingResponse pagingResponse = PagingResponse.builder()
                 .page(page)
@@ -42,7 +39,7 @@ public class CustomerController {
                 .count(customers.getTotalElements())
                 .totalPage(customers.getTotalPages())
                 .build();
-        CommonResponse<List<Customer>> response = CommonResponse.<List<Customer>>builder()
+        CommonResponse<List<CustomerResponse>> response = CommonResponse.<List<CustomerResponse>>builder()
                 .message("Successfully retrieve all data")
                 .statusCode(HttpStatus.OK.value())
                 .data(customers.getContent())
@@ -54,40 +51,55 @@ public class CustomerController {
     }
 
     @GetMapping("/{id}")
-    public Customer getCustomerById(@PathVariable String id) {
-        return customerService.getCustomerById(id);
+    public ResponseEntity<?> getCustomerById(@PathVariable String id) {
+        CommonResponse<CustomerResponse> response = CommonResponse.<CustomerResponse>builder()
+                .message("Successfully retrieve data")
+                .statusCode(HttpStatus.OK.value())
+                .data(customerService.getCustomerById(id))
+                .build();
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
     }
 
-    @PostMapping()
-    public Customer addCustomer(@Valid @RequestBody Customer customer) {
+    @PostMapping
+    public ResponseEntity<?> addCustomer(@RequestBody Customer customer) {
         try {
-            return customerService.addCustomer(customer);
+            CommonResponse<CustomerResponse> response = CommonResponse.<CustomerResponse>builder()
+                    .message("Successfully created customer")
+                    .statusCode(HttpStatus.OK.value())
+                    .data(customerService.addCustomer(customer))
+                    .build();
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body(response);
         } catch (RuntimeException e) {
             throw new RuntimeException("Phone number already exists");
         }
     }
 
-// Using Path variable to edit customer
-//    @PutMapping("/api/v1/customers/{id}")
-//    public Customer editCustomerv1(@PathVariable String id, @RequestBody Customer customer) {
-//        Optional<Customer> findData = customerRepository.findById(id);
-//        if (findData.isEmpty()) {
-//            throw new RuntimeException("Id not found");
-//        }
-//        findData.get().setFullName(customer.getFullName());
-//        findData.get().setPhoneNumber(customer.getPhoneNumber());
-//        findData.get().setIsMember(customer.getIsMember());
-//        return customerRepository.save(findData.get());
-//    }
-
-// Edit customer and get id directly from request body
-    @PutMapping()
-    public Customer editCustomerv2(@Valid @RequestBody Customer customer) {
-       return customerService.editCustomer(customer);
+    @PutMapping("/{id}")
+    public ResponseEntity<?> editCustomerv2(@PathVariable String id, @RequestBody CustomerRequest customer) {
+        CommonResponse<CustomerResponse> response = CommonResponse.<CustomerResponse>builder()
+                .message("Successfully edit data")
+                .statusCode(HttpStatus.OK.value())
+                .data(customerService.editCustomer(id, customer))
+                .build();
+        return ResponseEntity
+               .status(HttpStatus.OK)
+               .body(response);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteCustomerById(@PathVariable String id) {
+    public ResponseEntity<?> deleteCustomerById(@PathVariable String id) {
         customerService.deleteCustomer(id);
+        CommonResponse<?> response = CommonResponse.builder()
+                .message("Data deleted")
+                .statusCode(HttpStatus.OK.value())
+                .data("OK")
+                .build();
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
     }
 }

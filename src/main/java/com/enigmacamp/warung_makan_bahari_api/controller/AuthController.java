@@ -1,7 +1,8 @@
 package com.enigmacamp.warung_makan_bahari_api.controller;
 
+import com.enigmacamp.warung_makan_bahari_api.dto.request.AdminRegisterRequest;
 import com.enigmacamp.warung_makan_bahari_api.dto.request.AuthRequest;
-import com.enigmacamp.warung_makan_bahari_api.dto.request.RegisterRequest;
+import com.enigmacamp.warung_makan_bahari_api.dto.request.CustRegisterRequest;
 import com.enigmacamp.warung_makan_bahari_api.dto.response.CommonResponse;
 import com.enigmacamp.warung_makan_bahari_api.dto.response.LoginResponse;
 import com.enigmacamp.warung_makan_bahari_api.dto.response.RegisterResponse;
@@ -21,8 +22,8 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register/customer")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
-        RegisterResponse registerResponse = authService.register(request);
+    public ResponseEntity<?> register(@RequestBody CustRegisterRequest request) {
+        RegisterResponse registerResponse = authService.custRegister(request);
         CommonResponse<RegisterResponse> response = CommonResponse.<RegisterResponse>builder()
                 .message("Registered")
                 .statusCode(HttpStatus.CREATED.value())
@@ -33,7 +34,21 @@ public class AuthController {
                 .body(response);
     }
 
-    @PostMapping("/login/customer")
+    @PostMapping("/register/admin")
+//    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> registerAdmin(@RequestBody AdminRegisterRequest request) {
+        RegisterResponse registerResponse = authService.adminRegister(request);
+        CommonResponse<RegisterResponse> response = CommonResponse.<RegisterResponse>builder()
+                .message("Registered")
+                .statusCode(HttpStatus.CREATED.value())
+                .data(registerResponse)
+                .build();
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(response);
+    }
+
+    @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthRequest request) {
         LoginResponse login = authService.login(request);
         CommonResponse<LoginResponse> response = CommonResponse.<LoginResponse>builder()
@@ -45,4 +60,5 @@ public class AuthController {
                 .status(HttpStatus.CREATED)
                 .body(response);
     }
+
 }

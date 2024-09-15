@@ -9,8 +9,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -21,8 +19,10 @@ public class UserServiceImpl implements UserService {
         UserCredential result = credential.findById(id).orElseThrow(() -> new UsernameNotFoundException("Invalid credential"));
         return AppUser.builder()
                 .id(result.getId())
-                .username(result.getUsername())
-                .password(result.getPassword()).build();
+                .username(result.getUsername().toLowerCase())
+                .password(result.getPassword())
+                .role(result.getRole().getRoleName())
+                .build();
     }
 
     @Override
@@ -30,8 +30,9 @@ public class UserServiceImpl implements UserService {
         UserCredential result = credential.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Invalid credential"));
         return AppUser.builder()
                 .id(result.getId())
-                .username(result.getUsername())
+                .username(result.getUsername().toLowerCase())
                 .password(result.getPassword())
+                .role(result.getRole().getRoleName())
                 .build();
     }
 }

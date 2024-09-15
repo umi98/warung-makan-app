@@ -6,29 +6,34 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.enigmacamp.warung_makan_bahari_api.entity.AppUser;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
-import java.util.logging.Logger;
 
 @Component
 @Slf4j
 public class JwtUtil {
-    private final String jwtSecret = "sukaSukaS4y@doNk";
-    private final String issuer = "Warung Makan Bahari";
+    @Value("${app.warung-makan-bahari-api.jwt-secret}")
+    private String jwtSecret;
+    @Value("${app.warung-makan-bahari-api.issuer}")
+    private String issuer;
+    @Value("${app.warung-makan-bahari-api.jwt-expire}")
+    private long jwtExpire;
 
-    public String generateToken(String userId) {
+    public String generateToken(AppUser appUser) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(jwtSecret.getBytes());
             return JWT.create()
                     .withIssuer(issuer)
-                    .withExpiresAt(Instant.now().plusSeconds(600))
+                    .withSubject(appUser.getId())
+                    .withExpiresAt(Instant.now().plusSeconds(jwtExpire))
                     .withIssuedAt(Instant.now())
+                    .withClaim("role", appUser.getRole().name())
                     .sign(algorithm);
         } catch (JWTCreationException e) {
             log.error("Error when creating token", e.getMessage());
@@ -43,23 +48,23 @@ public class JwtUtil {
             DecodedJWT decodedJWT = verifier.verify(token);
             return decodedJWT.getIssuer().equals(issuer);
         } catch (JWTVerificationException e) {
-            log.error("Invalid JWT", e.getMessage());
+            log.error("Invalid JWT a {}", e.getMessage());
             return false;
         }
     }
 
-    public Map<String, Object> getUserInfoByToken(String token) {
+    public Map<String, String> getUserInfoByToken(String token) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(jwtSecret.getBytes());
             JWTVerifier verifier = JWT.require(algorithm).build();
             DecodedJWT decodedJWT = verifier.verify(token);
 
-            Map<String, Object> userInfo = new HashMap<>();
+            Map<String, String> userInfo = new HashMap<>();
             userInfo.put("userId", decodedJWT.getSubject());
-            userInfo.put("role", decodedJWT.getClaim("role"));
+            userInfo.put("role", decodedJWT.getClaim("role").asString());
             return userInfo;
         } catch (JWTVerificationException e) {
-            log.error("Invalid JWT", e.getMessage());
+            log.error("Invalid JWT {}", e.getMessage());
             return null;
         }
     }

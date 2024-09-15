@@ -5,8 +5,6 @@ import com.enigmacamp.warung_makan_bahari_api.dto.request.OrderRequest;
 import com.enigmacamp.warung_makan_bahari_api.dto.response.OrderDetailResponse;
 import com.enigmacamp.warung_makan_bahari_api.dto.response.OrderResponse;
 import com.enigmacamp.warung_makan_bahari_api.entity.*;
-import com.enigmacamp.warung_makan_bahari_api.repository.MenuRepository;
-import com.enigmacamp.warung_makan_bahari_api.repository.OrderDetailRepository;
 import com.enigmacamp.warung_makan_bahari_api.repository.OrderRepository;
 import com.enigmacamp.warung_makan_bahari_api.service.*;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,46 +24,10 @@ public class OrderServiceImpl implements OrderService {
     private final TablesService tablesService;
     private final OrderDetailService orderDetailService;
 
-//    @Transactional(rollbackFor = Exception.class)
-//    @Override
-//    public Order addNewTransaction(OrderRequest orderRequest) {
-//        Order order = new Order();
-//        Tables tables = new Tables();
-//        tables.setId(orderRequest.getTableId());
-//        order.setTables(tables);
-//        Customer customer = new Customer();
-//        customer.setId(orderRequest.getCustomerId());
-//        order.setCustomer(customer);
-//        order.setTransDate(LocalDateTime.now());
-//
-//        List<OrderDetail> orderDetails = new ArrayList<>();
-//        for (OrderDetailRequest detailRequest : orderRequest.getOrderDetails()) {
-//            OrderDetail detail = new OrderDetail();
-//
-//            Menu menu = menuService.getMenuById(detailRequest.getMenuId());
-//            menu.setId(detailRequest.getMenuId());
-//
-//            detail.setMenu(menu);
-//            detail.setPrice(menu.getPrice());
-//            detail.setQty(detailRequest.getQty());
-//
-//            orderDetails.add(detail);
-//        }
-//
-//        order.setOrderDetails(orderDetails);
-//        orderRepository.saveAndFlush(order);
-//        orderDetailService.addBulk(order.getOrderDetails());
-//        for(OrderDetail orderDetail : order.getOrderDetails()) {
-//            orderDetail.setOrder(order);
-//        }
-//
-//        return order;
-//    }
-
     @Transactional(rollbackFor = Exception.class)
     @Override
     public OrderResponse addNewTransaction(OrderRequest orderRequest) {
-        Customer customer = customerService.getCustomerById(orderRequest.getCustomerId());
+        Customer customer = customerService.getCustById(orderRequest.getCustomerId());
         Tables tables = tablesService.getTablesById(orderRequest.getTableId());
         Order order = Order.builder()
                 .customer(customer)
@@ -96,13 +57,6 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderResponse> getAllOrders() {
         List<Order> result = orderRepository.findAll();
-        // cara 1
-//        List<OrderResponse> responses = new ArrayList<>();
-//        for (Order res: result) {
-//            OrderResponse orderResponse = mapToResponse(res);
-//            responses.add(orderResponse);
-//        }
-        // cara 2
         List<OrderResponse> responses = result.stream().map(this::mapToResponse).toList();
         return responses;
     }

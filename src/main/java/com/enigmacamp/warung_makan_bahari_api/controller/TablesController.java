@@ -1,5 +1,6 @@
 package com.enigmacamp.warung_makan_bahari_api.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,16 +36,19 @@ public class TablesController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public Tables addNewTables(@RequestBody Tables tables) {
         return tablesService.addNewTables(tables);
     }
 
     @PutMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public Tables editTables(@RequestBody Tables tables) {
         return tablesService.ediTables(tables);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteTables(@PathVariable String id) {
         tablesService.deleteTable(id);
     }

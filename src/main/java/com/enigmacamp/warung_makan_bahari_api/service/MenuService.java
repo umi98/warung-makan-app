@@ -13,8 +13,9 @@ import java.util.List;
 
 public interface MenuService {
     MenuResponse addMenu(MenuRequest menu);
-    Menu getMenuById(String id);
-    Page<Menu> getAllMenu(String name, Long minPrice, Long maxPrice, PagingRequest request);
-    Menu updateMenu(Menu menu);
+    MenuResponse getMenuById(String id);
+    Menu getById(String id);
+    Page<MenuResponse> getAllMenu(String name, Long minPrice, Long maxPrice, PagingRequest request);
+    MenuResponse updateMenu(String id, MenuRequest menu);
     void deleteMenu(String id);
 }
