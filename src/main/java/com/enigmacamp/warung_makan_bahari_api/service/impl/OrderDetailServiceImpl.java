@@ -24,24 +24,14 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 
     @Override
     public OrderDetailResponse getOrderDetailById(String id) {
-        OrderDetail result = orderDetailRepository.findById(id).get();
-        if (result.getId() == null) return null;
-        return mapToResponse(result);
-    }
-
-    @Override
-    public OrderDetailResponse getOrderDetailByOrderId(String id) {
-        List<OrderDetail> orderDetails = orderDetailRepository.findByOrderId(id);
-        return null;
-    }
-
-    private OrderDetailResponse mapToResponse(OrderDetail orderDetail) {
+        OrderDetail result = orderDetailRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order detail not found"));
         return OrderDetailResponse.builder()
-                .orderDetailId(orderDetail.getId())
-                .orderId(orderDetail.getOrder().getId())
-                .menuId(orderDetail.getMenu().getId())
-                .price(orderDetail.getPrice())
-                .qty(orderDetail.getQty())
+                .orderDetailId(result.getId())
+                .orderId(result.getOrder().getId())
+                .menuId(result.getMenu().getId())
+                .price(result.getMenu().getPrice())
+                .qty(result.getQty())
                 .build();
     }
 }

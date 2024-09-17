@@ -43,7 +43,7 @@ public class OrderController {
         return responseBuilder.buildResponse(orderResponse, "Successfully retrieve all data", HttpStatus.FOUND);
     }
 
-    @GetMapping(PathApi.ID)
+    @GetMapping(PathApi.DETAIL_ID)
     public ResponseEntity<?> getOrderDetailById(@PathVariable String id) {
         OrderDetailResponse orderDetailResponse = orderDetailService.getOrderDetailById(id);
         return responseBuilder.buildResponse(orderDetailResponse, "Successfully retrieve data", HttpStatus.FOUND);

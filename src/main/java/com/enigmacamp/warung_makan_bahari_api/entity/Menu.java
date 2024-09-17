@@ -31,4 +31,8 @@ public class Menu {
     @JsonIgnore
     @OneToMany(mappedBy = "menu", cascade = CascadeType.PERSIST)
     private List<OrderDetail> orderDetail;
+
+    @OneToOne
+    @JoinColumn(name = "m_menu_image_id", unique = true)
+    private MenuImage menuImage;
 }

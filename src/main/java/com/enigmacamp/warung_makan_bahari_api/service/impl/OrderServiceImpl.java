@@ -28,7 +28,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderResponse addNewTransaction(OrderRequest orderRequest) {
         Customer customer = customerService.getCustById(orderRequest.getCustomerId());
-        Tables tables = tablesService.getTablesById(orderRequest.getTableId());
+        Tables tables = tablesService.getById(orderRequest.getTableId());
         Order order = Order.builder()
                 .customer(customer)
                 .tables(tables)
@@ -62,8 +62,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderResponse getOrderById(String id) {
-        Order result = orderRepository.findById(id).get();
-        if (result.getId() == null) return null;
+        Order result = orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
         return mapToResponse(result);
     }
 

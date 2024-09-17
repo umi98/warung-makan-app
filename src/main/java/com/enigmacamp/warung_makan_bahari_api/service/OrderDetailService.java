@@ -9,6 +9,5 @@ import java.util.List;
 public interface OrderDetailService {
     List<OrderDetail> addBulk(List<OrderDetail> orderDetails);
     OrderDetailResponse getOrderDetailById(String id);
-    OrderDetailResponse getOrderDetailByOrderId(String id);
 
 }

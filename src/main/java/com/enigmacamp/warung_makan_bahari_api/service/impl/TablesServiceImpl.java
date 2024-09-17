@@ -42,6 +42,11 @@ public class TablesServiceImpl implements TablesService {
         return mapToResponse(findByIdOrThrowException(id));
     }
 
+    @Override
+    public Tables getById(String id) {
+        return findByIdOrThrowException(id);
+    }
+
     @Transactional(rollbackFor = Exception.class)
     public TablesResponse addNewTables(TablesRequest tables) {
         validationUtil.validate(tables);

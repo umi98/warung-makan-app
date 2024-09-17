@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @NoArgsConstructor
@@ -18,4 +19,6 @@ public class MenuRequest {
     @NotNull
     @Positive(message = "require positive value")
     private Long price;
+    @NotNull(message = "image requires")
+    private MultipartFile multipartFile;
 }

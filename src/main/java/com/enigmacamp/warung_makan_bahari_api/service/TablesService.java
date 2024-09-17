@@ -14,6 +14,7 @@ public interface TablesService {
     Page<TablesResponse> getAllTables(String name, PagingRequest request);
 
     TablesResponse getTablesById(String id);
+    Tables getById(String id);
 
     TablesResponse addNewTables(TablesRequest tables);
 

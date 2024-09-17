@@ -10,6 +10,7 @@ public class PathApi {
 
     // sub path
     public static final String ID = "/{id}";
+    public static final String DETAIL_ID = "/detail/{id}";
     public static final String LOGIN = "/login";
     public static final String REGISTER_USER = "/register/customer";
     public static final String REGISTER_ADMIN = "/register/admin";

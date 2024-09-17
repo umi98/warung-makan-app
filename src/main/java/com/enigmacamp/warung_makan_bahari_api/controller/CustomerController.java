@@ -40,7 +40,7 @@ public class CustomerController {
                 .count(customers.getTotalElements())
                 .totalPage(customers.getTotalPages())
                 .build();
-        return responseBuilder.buildResponse(pagingResponse, "Successfully retrieve all data", HttpStatus.OK);
+        return responseBuilder.buildResponsePaging(pagingResponse, customers, "Successfully retrieve all data", HttpStatus.OK);
     }
 
     @GetMapping(PathApi.ID)

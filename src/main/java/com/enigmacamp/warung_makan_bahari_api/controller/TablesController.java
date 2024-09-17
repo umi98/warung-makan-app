@@ -50,7 +50,7 @@ public class TablesController {
                 .count(result.getTotalElements())
                 .totalPage(result.getTotalPages())
                 .build();
-        return responseBuilder.buildResponse(pagingResponse, "Successfully retrieve all data", HttpStatus.OK);
+        return responseBuilder.buildResponsePaging(pagingResponse, result, "Successfully retrieve all data", HttpStatus.OK);
     }
 
     @GetMapping(PathApi.ID)
