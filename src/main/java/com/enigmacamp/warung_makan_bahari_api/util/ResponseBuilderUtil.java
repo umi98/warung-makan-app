@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class ResponseBuilder {
+public class ResponseBuilderUtil {
     public <T> ResponseEntity<CommonResponse<T>> buildResponse(T data, String message, HttpStatus status) {
         CommonResponse<T> response = CommonResponse.<T>builder()
                 .message(message)

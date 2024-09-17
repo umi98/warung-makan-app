@@ -3,11 +3,10 @@ package com.enigmacamp.warung_makan_bahari_api.controller;
 import com.enigmacamp.warung_makan_bahari_api.constant.PathApi;
 import com.enigmacamp.warung_makan_bahari_api.dto.request.MenuRequest;
 import com.enigmacamp.warung_makan_bahari_api.dto.request.PagingRequest;
-import com.enigmacamp.warung_makan_bahari_api.dto.response.CommonResponse;
 import com.enigmacamp.warung_makan_bahari_api.dto.response.MenuResponse;
 import com.enigmacamp.warung_makan_bahari_api.dto.response.PagingResponse;
 import com.enigmacamp.warung_makan_bahari_api.service.MenuService;
-import com.enigmacamp.warung_makan_bahari_api.util.ResponseBuilder;
+import com.enigmacamp.warung_makan_bahari_api.util.ResponseBuilderUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
@@ -19,14 +18,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(PathApi.MENUS)
 public class MenuController {
     private final MenuService menuService;
-    private final ResponseBuilder responseBuilder;
+    private final ResponseBuilderUtil responseBuilderUtil;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 //    @PreAuthorize("hasRole('ADMIN')")
@@ -38,7 +35,7 @@ public class MenuController {
                 .price(price)
                 .multipartFile(img).build();
         MenuResponse menuResponse = menuService.addMenu(request);
-        return responseBuilder.buildResponse(menuResponse, "Successfully add new menu", HttpStatus.CREATED);
+        return responseBuilderUtil.buildResponse(menuResponse, "Successfully add new menu", HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -58,13 +55,13 @@ public class MenuController {
                 .count(result.getTotalElements())
                 .totalPage(result.getTotalPages())
                 .build();
-        return responseBuilder.buildResponsePaging(pagingResponse, result, "Successfully retrieve all items", HttpStatus.FOUND);
+        return responseBuilderUtil.buildResponsePaging(pagingResponse, result, "Successfully retrieve all items", HttpStatus.FOUND);
     }
 
     @GetMapping(PathApi.ID)
     public ResponseEntity<?> getMenuById(@PathVariable String id) {
         MenuResponse response = menuService.getMenuById(id);
-        return responseBuilder.buildResponse(response, "Successfully retrieve data", HttpStatus.OK);
+        return responseBuilderUtil.buildResponse(response, "Successfully retrieve data", HttpStatus.OK);
     }
 
     @GetMapping("/{id}/image")
@@ -80,13 +77,13 @@ public class MenuController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> editMenu(@PathVariable String id, @RequestBody MenuRequest menu) {
         MenuResponse response = menuService.updateMenu(id, menu);
-        return responseBuilder.buildResponse(response, "Menu edited", HttpStatus.OK);
+        return responseBuilderUtil.buildResponse(response, "Menu edited", HttpStatus.OK);
     }
 
     @DeleteMapping(PathApi.ID)
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteMenu(@PathVariable String id) {
         menuService.deleteMenu(id);
-        return responseBuilder.buildResponse("OK", "Menu deleted", HttpStatus.OK);
+        return responseBuilderUtil.buildResponse("OK", "Menu deleted", HttpStatus.OK);
     }
 }

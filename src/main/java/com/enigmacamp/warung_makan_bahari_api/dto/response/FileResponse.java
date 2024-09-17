@@ -1,6 +1,5 @@
 package com.enigmacamp.warung_makan_bahari_api.dto.response;
 
-import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,8 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MenuResponse {
-    private String name;
-    private Long price;
-    private FileResponse image;
+public class FileResponse {
+    private String fileName;
+    private String path;
 }

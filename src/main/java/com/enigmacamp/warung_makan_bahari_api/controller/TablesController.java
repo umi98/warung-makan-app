@@ -5,7 +5,7 @@ import com.enigmacamp.warung_makan_bahari_api.dto.request.PagingRequest;
 import com.enigmacamp.warung_makan_bahari_api.dto.request.TablesRequest;
 import com.enigmacamp.warung_makan_bahari_api.dto.response.PagingResponse;
 import com.enigmacamp.warung_makan_bahari_api.dto.response.TablesResponse;
-import com.enigmacamp.warung_makan_bahari_api.util.ResponseBuilder;
+import com.enigmacamp.warung_makan_bahari_api.util.ResponseBuilderUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,12 +13,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.enigmacamp.warung_makan_bahari_api.entity.Tables;
 import com.enigmacamp.warung_makan_bahari_api.service.TablesService;
 
 import lombok.RequiredArgsConstructor;
-
-import java.util.List;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,7 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping(PathApi.TABLES)
 public class TablesController {
     private final TablesService tablesService;
-    private final ResponseBuilder responseBuilder;
+    private final ResponseBuilderUtil responseBuilderUtil;
 
     @GetMapping
     public ResponseEntity<?> getAllTables(@RequestParam(required = false) String name,
@@ -50,34 +47,34 @@ public class TablesController {
                 .count(result.getTotalElements())
                 .totalPage(result.getTotalPages())
                 .build();
-        return responseBuilder.buildResponsePaging(pagingResponse, result, "Successfully retrieve all data", HttpStatus.OK);
+        return responseBuilderUtil.buildResponsePaging(pagingResponse, result, "Successfully retrieve all data", HttpStatus.OK);
     }
 
     @GetMapping(PathApi.ID)
     public ResponseEntity<?> getTablesById(@PathVariable String id) {
         TablesResponse response = tablesService.getTablesById(id);
-        return responseBuilder.buildResponse(response, "Successfully retrieve all data", HttpStatus.OK);
+        return responseBuilderUtil.buildResponse(response, "Successfully retrieve all data", HttpStatus.OK);
     }
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> addNewTables(@RequestBody TablesRequest tables) {
         TablesResponse response = tablesService.addNewTables(tables);
-        return responseBuilder.buildResponse(response, "Successfully add new table", HttpStatus.OK);
+        return responseBuilderUtil.buildResponse(response, "Successfully add new table", HttpStatus.OK);
     }
 
     @PutMapping(PathApi.ID)
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> editTables(@PathVariable String id, @RequestBody TablesRequest tables) {
         TablesResponse response = tablesService.editTables(id, tables);
-        return responseBuilder.buildResponse(response, "Table edited", HttpStatus.OK);
+        return responseBuilderUtil.buildResponse(response, "Table edited", HttpStatus.OK);
     }
 
     @DeleteMapping(PathApi.ID)
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteTables(@PathVariable String id) {
         tablesService.deleteTable(id);
-        return responseBuilder.buildResponse("OK", "Table deleted", HttpStatus.OK);
+        return responseBuilderUtil.buildResponse("OK", "Table deleted", HttpStatus.OK);
     }
 
 }

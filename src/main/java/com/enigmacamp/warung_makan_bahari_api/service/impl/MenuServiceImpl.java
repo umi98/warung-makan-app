@@ -1,7 +1,9 @@
 package com.enigmacamp.warung_makan_bahari_api.service.impl;
 
+import com.enigmacamp.warung_makan_bahari_api.constant.PathApi;
 import com.enigmacamp.warung_makan_bahari_api.dto.request.MenuRequest;
 import com.enigmacamp.warung_makan_bahari_api.dto.request.PagingRequest;
+import com.enigmacamp.warung_makan_bahari_api.dto.response.FileResponse;
 import com.enigmacamp.warung_makan_bahari_api.dto.response.MenuResponse;
 import com.enigmacamp.warung_makan_bahari_api.entity.Menu;
 import com.enigmacamp.warung_makan_bahari_api.entity.MenuImage;
@@ -101,10 +103,15 @@ public class MenuServiceImpl implements MenuService {
     }
 
     private MenuResponse mapToResponse(Menu menu) {
+        FileResponse fileResponse = FileResponse.builder()
+                .fileName(menu.getMenuImage().getName())
+                .path(PathApi.MENUS + menu.getId() + "/image")
+                .build();
         return MenuResponse.builder()
                 .name(menu.getName())
                 .price(menu.getPrice())
-                .path(menu.getMenuImage().getPath())
+                .image(fileResponse)
+//                .path(menu.getMenuImage().getPath())
                 .build();
     }
 }
