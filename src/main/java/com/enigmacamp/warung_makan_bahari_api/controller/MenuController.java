@@ -7,6 +7,8 @@ import com.enigmacamp.warung_makan_bahari_api.dto.response.MenuResponse;
 import com.enigmacamp.warung_makan_bahari_api.dto.response.PagingResponse;
 import com.enigmacamp.warung_makan_bahari_api.service.MenuService;
 import com.enigmacamp.warung_makan_bahari_api.util.ResponseBuilderUtil;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
@@ -21,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(PathApi.MENUS)
+@SecurityRequirement(name = "Bearer Authentication")
 public class MenuController {
     private final MenuService menuService;
     private final ResponseBuilderUtil responseBuilderUtil;

@@ -78,7 +78,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     private Customer findByIdOrThrowException(String id) {
         Optional<Customer> customer = customerRepository.findById(id);
-        return customer.orElseThrow(() -> new RuntimeException("ID not found"));
+        return customer.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"ID not found"));
     }
 
     private CustomerResponse mapToResponse(Customer customer) {
