@@ -5,6 +5,7 @@ import com.enigmacamp.warung_makan_bahari_api.dto.response.CustomerResponse;
 import com.enigmacamp.warung_makan_bahari_api.entity.Customer;
 import com.enigmacamp.warung_makan_bahari_api.service.CustomerService;
 import com.enigmacamp.warung_makan_bahari_api.util.ResponseBuilderUtil;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,27 +39,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
 
-//@WebMvcTest(CustomerController.class)
 class CustomerControllerTest {
-//    @InjectMocks
-//    private CustomerController customerController;
 
     private static final Logger logger = LoggerFactory.getLogger(CustomerControllerTest.class);
     @MockBean
     private CustomerService customerService;
-    @MockBean
+    @Autowired
     private ResponseBuilderUtil responseBuilderUtil;
 
-//    @Autowired
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
 
     @BeforeEach
     void setUp() {
-//        MockitoAnnotations.openMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(new CustomerController(customerService, responseBuilderUtil)).build();
-        objectMapper = new ObjectMapper();
     }
 
     @Test
@@ -72,36 +67,36 @@ class CustomerControllerTest {
     @WithMockUser
     @Test
     void addCustomer_ShouldReturnNewCustomer() throws Exception {
-        // Arrange
         Customer customer = Customer.builder()
                 .fullName("bawang")
-                .phoneNumber("087")
+                .phoneNumber("081")
                 .isMember(true)
                 .build();
         CustomerResponse response = CustomerResponse.builder()
-                .fullName("bawang")
-                .phoneNumber("087")
-                .isMember(customer.getIsMember()).build();
-        when(customerService.addCustomer(any())).thenReturn(response);
+                .fullName(customer.getFullName())
+                .phoneNumber(customer.getPhoneNumber())
+                .isMember(customer.getIsMember())
+                .build();
+
+        // Mock the customerService's addCustomer method
+        when(customerService.addCustomer(any(Customer.class))).thenReturn(response);
+
         // Act
-        MvcResult mvcResult = mockMvc.perform(post("/api/v1/customers")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(customer)))
+        MvcResult result = mockMvc.perform(post("/api/v1/customers")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(customer)))
                 .andExpect(status().isOk())
-                        .andReturn();
+                .andExpect(jsonPath("$.message").value("Successfully created customer"))
+                .andExpect(jsonPath("$.statusCode").value(200))
+                .andExpect(jsonPath("$.data.fullName").value("bawang"))
+                .andExpect(jsonPath("$.data.phoneNumber").value("081"))
+                .andExpect(jsonPath("$.data.isMember").value(true))
+                .andReturn();
 
-        String responses = mvcResult.getResponse().getContentAsString();
+        // Print response for debugging
+        String jsonResponse = result.getResponse().getContentAsString();
+        logger.info("Response JSON: " + jsonResponse);
 
-        System.out.println("response : " + responses);
-//                .andDo(result -> logger.info("zzzz " + result.getResponse().getContentAsString()));
-//                .andDo(result -> System.out.println(result.getResponse() + "hasil"));
-//                .andExpect(jsonPath("$.data.fullName").value("bawang"))
-//                .andExpect(jsonPath("$.data.phoneNumber").value("087"))
-//                .andExpect(jsonPath("$.data.isMember").value(true));
-//                .andReturn();
-//        String jsonResponse = result.getResponse().getContentAsString();
-//        System.out.println("Response JSON: " + jsonResponse);
-//        verify(customerService,times(1)).addCustomer(customer);
     }
 
     @Test
