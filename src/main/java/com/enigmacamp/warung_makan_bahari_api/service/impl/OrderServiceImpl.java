@@ -8,8 +8,10 @@ import com.enigmacamp.warung_makan_bahari_api.entity.*;
 import com.enigmacamp.warung_makan_bahari_api.repository.OrderRepository;
 import com.enigmacamp.warung_makan_bahari_api.service.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -63,7 +65,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderResponse getOrderById(String id) {
         Order result = orderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found"));
         return mapToResponse(result);
     }
 

@@ -154,10 +154,14 @@ class CustomerServiceImplTest {
                 .build();
         when(customerRepository.findById(customer.getId())).thenReturn(Optional.of(customer));
         customerServiceImpl.deleteCustomer(customer.getId());
-//        assertNotNull(result);
-//        assertEquals(customer.getFullName(), result.getFullName());
-//        assertEquals(customer.getPhoneNumber(), result.getPhoneNumber());
-//        assertEquals(customer.getIsMember(), result.getIsMember());
+    }
+
+    @Test
+    void deleteCustomer_WhenCustomerNotFound_ShouldReturnNotFound() {
+        when(customerRepository.findById("id01")).thenReturn(Optional.empty());
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> customerServiceImpl.deleteCustomer("id01"));
+        assertEquals("404 NOT_FOUND \"ID not found\"", exception.getMessage());
+//        verify(customerRepository, times(1)).deleteById("id01");
     }
 
 

@@ -57,7 +57,7 @@ public class CustomerController {
     }
 
     @PutMapping(PathApi.ID)
-    public ResponseEntity<?> editCustomerv2(@PathVariable String id, @RequestBody CustomerRequest customer) {
+    public ResponseEntity<?> editCustomer(@PathVariable String id, @RequestBody CustomerRequest customer) {
         CustomerResponse response = customerService.editCustomer(id, customer);
         return responseBuilderUtil.buildResponse(response, "Successfully edit customer", HttpStatus.OK);
     }
