@@ -105,7 +105,7 @@ public class MenuServiceImpl implements MenuService {
     private MenuResponse mapToResponse(Menu menu) {
         FileResponse fileResponse = FileResponse.builder()
                 .fileName(menu.getMenuImage().getName())
-                .path(PathApi.MENUS + menu.getId() + "/image")
+                .path(PathApi.MENUS + "/" + menu.getId() + "/image")
                 .build();
         return MenuResponse.builder()
                 .name(menu.getName())
