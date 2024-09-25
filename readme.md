@@ -35,3 +35,19 @@ If you manually switch to a different parent and actually want the inheritance, 
 ### Swagger Link
 [Swagger UI](http://localhost:8080/swagger-ui/index.html)
 
+### Miscellaneous Chattering
+
+ini waktu export aplikasi ke 
+````
+jar mvn clean package -DskipTest -DDB_USERNAME=postgres -DDB_PASSWORD=123 -DJWT_SECRET=sukaSukaS4y@doNk -DDIRECTORY_PATH:/assets/img
+````
+ini buat bikin images docker 
+````
+build -t app-wmb .
+````
+setelah ini pastikan database di container postgres docker sudah dibuat. host_db sesuaikan dengan alamat ip container postgres
+
+ini bikin container buat aplikasi java
+````
+docker run -d -e HOST_DB=172.17.0.2 -e POSTGRES_PASSWORD=123 -e DB_NAME=db_wmb4 -e JWT_SECRET=sukaSukaS4y@doNk -e DIRECTORY_PATH=/assets/img --mount type=volume,src=newfolder,destination=/var/lib/postgresql/data --name app-wmb app-wmb
+````
