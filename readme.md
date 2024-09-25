@@ -39,7 +39,7 @@ If you manually switch to a different parent and actually want the inheritance, 
 
 ini waktu export aplikasi ke 
 ````
-jar mvn clean package -DskipTest -DDB_USERNAME=postgres -DDB_PASSWORD=123 -DJWT_SECRET=sukaSukaS4y@doNk -DDIRECTORY_PATH:/assets/img
+jar mvn clean package -DskipTest -DDB_USERNAME=postgres -DDB_PASSWORD=123 -DJWT_SECRET=sukaSukaS4y@doNk -DDIRECTORY_PATH=/assets/img
 ````
 ini buat bikin images docker 
 ````
