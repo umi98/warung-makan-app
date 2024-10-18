@@ -108,6 +108,7 @@ public class MenuServiceImpl implements MenuService {
                 .path(PathApi.MENUS + "/" + menu.getId() + "/image")
                 .build();
         return MenuResponse.builder()
+                .id(menu.getId())
                 .name(menu.getName())
                 .price(menu.getPrice())
                 .image(fileResponse)

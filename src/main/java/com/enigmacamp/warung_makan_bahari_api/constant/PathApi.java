@@ -6,7 +6,7 @@ public class PathApi {
     public static final String MENUS = "/api/v1/menus";
     public static final String TABLES = "/api/v1/tables";
     public static final String ORDER = "/api/v1/orders";
-    public static final String AUTH = "api/v1/auth";
+    public static final String AUTH = "/api/v1/auth";
 
     // sub path
     public static final String ID = "/{id}";

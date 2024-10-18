@@ -58,7 +58,7 @@ public class MenuController {
                 .count(result.getTotalElements())
                 .totalPage(result.getTotalPages())
                 .build();
-        return responseBuilderUtil.buildResponsePaging(pagingResponse, result, "Successfully retrieve all items", HttpStatus.FOUND);
+        return responseBuilderUtil.buildResponsePaging(pagingResponse, result, "Successfully retrieve all items", HttpStatus.OK);
     }
 
     @GetMapping(PathApi.ID)
