@@ -10,5 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class TablesResponse {
+    private String id;
     private String name;
 }

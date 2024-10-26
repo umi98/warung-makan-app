@@ -69,6 +69,13 @@ public class OrderServiceImpl implements OrderService {
         return mapToResponse(result);
     }
 
+    @Override
+    public List<OrderResponse> getOrderByCustomerId(String id) {
+        Customer customer = customerService.getCustById(id);
+        List<Order> result = orderRepository.findByCustomer(customer);
+        return result.stream().map(this::mapToResponse).toList();
+    }
+
     private OrderResponse mapToResponse(Order order) {
         List<OrderDetailResponse> response = order.getOrderDetails().stream().map(orderDetail -> {
             return OrderDetailResponse.builder()

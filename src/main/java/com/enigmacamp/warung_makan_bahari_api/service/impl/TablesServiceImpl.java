@@ -82,6 +82,7 @@ public class TablesServiceImpl implements TablesService {
 
     private TablesResponse mapToResponse(Tables tables) {
         return TablesResponse.builder()
+                .id(tables.getId())
                 .name(tables.getName())
                 .build();
     }

@@ -8,6 +8,10 @@ import java.util.List;
 
 public interface OrderService {
     OrderResponse addNewTransaction(OrderRequest orderRequest);
+
     List<OrderResponse> getAllOrders();
+
     OrderResponse getOrderById(String id);
+
+    List<OrderResponse> getOrderByCustomerId(String id);
 }

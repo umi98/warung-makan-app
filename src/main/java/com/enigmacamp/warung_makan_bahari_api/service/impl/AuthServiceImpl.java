@@ -9,10 +9,7 @@ import com.enigmacamp.warung_makan_bahari_api.dto.response.RegisterResponse;
 import com.enigmacamp.warung_makan_bahari_api.entity.*;
 import com.enigmacamp.warung_makan_bahari_api.repository.UserCredentialRepository;
 import com.enigmacamp.warung_makan_bahari_api.security.JwtUtil;
-import com.enigmacamp.warung_makan_bahari_api.service.AdminService;
-import com.enigmacamp.warung_makan_bahari_api.service.AuthService;
-import com.enigmacamp.warung_makan_bahari_api.service.CustomerService;
-import com.enigmacamp.warung_makan_bahari_api.service.RoleService;
+import com.enigmacamp.warung_makan_bahari_api.service.*;
 import com.enigmacamp.warung_makan_bahari_api.util.ValidationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -116,7 +113,16 @@ public class AuthServiceImpl implements AuthService {
         SecurityContextHolder.getContext().setAuthentication(authenticate);
         AppUser appUser = (AppUser) authenticate.getPrincipal();
         String token = jwtUtil.generateToken(appUser);
-
+        if (appUser.getRole().name().equals("ROLE_CUSTOMER")) {
+            UserCredential user = userCredentialRepository.findById(appUser.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "ID not found"));
+            Customer customer = customerService.getCustomerByUserId(user);
+            return LoginResponse.builder()
+                    .token(token)
+                    .id(customer.getId())
+                    .username(request.getUsername())
+                    .role(appUser.getRole().name())
+                    .build();
+        }
         return LoginResponse.builder()
                 .token(token)
                 .id(appUser.getId())

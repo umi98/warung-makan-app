@@ -4,6 +4,7 @@ import com.enigmacamp.warung_makan_bahari_api.dto.request.CustomerRequest;
 import com.enigmacamp.warung_makan_bahari_api.dto.request.PagingRequest;
 import com.enigmacamp.warung_makan_bahari_api.dto.response.CustomerResponse;
 import com.enigmacamp.warung_makan_bahari_api.entity.Customer;
+import com.enigmacamp.warung_makan_bahari_api.entity.UserCredential;
 import com.enigmacamp.warung_makan_bahari_api.repository.CustomerRepository;
 import com.enigmacamp.warung_makan_bahari_api.service.CustomerService;
 import com.enigmacamp.warung_makan_bahari_api.util.ValidationUtil;
@@ -48,8 +49,13 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    public Customer getCustomerByUserId(UserCredential userCredential) {
+        return customerRepository.findByUserCredential(userCredential);
+    }
+
+    @Override
     public Page<CustomerResponse> getAllCustomers(PagingRequest request) {
-        Pageable pageable = PageRequest.of(request.getPage() - 1, request.getSize() );
+        Pageable pageable = PageRequest.of(request.getPage() - 1, request.getSize());
         Page<Customer> customers = customerRepository.findAll(pageable);
         return customers.map(this::mapToResponse);
     }
@@ -78,7 +84,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     private Customer findByIdOrThrowException(String id) {
         Optional<Customer> customer = customerRepository.findById(id);
-        return customer.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"ID not found"));
+        return customer.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "ID not found"));
     }
 
     private CustomerResponse mapToResponse(Customer customer) {
